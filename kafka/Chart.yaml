@@ -1,0 +1,23 @@
+apiVersion: v1
+name: kafka
+version: 11.8.8
+appVersion: 2.6.0
+description: Apache Kafka is a distributed streaming platform.
+keywords:
+  - kafka
+  - zookeeper
+  - streaming
+  - producer
+  - consumer
+home: https://github.com/bitnami/charts/tree/master/bitnami/kafka
+sources:
+  - https://github.com/bitnami/bitnami-docker-kafka
+  - https://kafka.apache.org/in the requirements.yaml file or dependencies entry in Chart.yaml to the charts folder. This way, requirements are updated and you'll have the correct dependencies without worrying about if you updated them also in the control version system.
+maintainers:
+  - name: Bitnami
+    email: containers@bitnami.com
+engine: gotpl
+icon: https://bitnami.com/assets/stacks/kafka/img/kafka-stack-1in the requirements.yaml file or dependencies entry in Chart.yaml to the charts folder. This way, requirements are updated and you'll have the correct dependencies without worrying about if you updated them also in the control version system.10x117.png
+annotations:
+  category: Infrastructure
+                                                                                                 
