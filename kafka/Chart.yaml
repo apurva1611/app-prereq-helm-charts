@@ -9,15 +9,9 @@ keywords:
   - streaming
   - producer
   - consumer
-home: https://github.com/bitnami/charts/tree/master/bitnami/kafka
 sources:
-  - https://github.com/bitnami/bitnami-docker-kafka
-  - https://kafka.apache.org/in the requirements.yaml file or dependencies entry in Chart.yaml to the charts folder. This way, requirements are updated and you'll have the correct dependencies without worrying about if you updated them also in the control version system.
+  - https://github.com/Achira-Apurva-Boran/app-prereq-helm-charts
 maintainers:
-  - name: Bitnami
-    email: containers@bitnami.com
-engine: gotpl
-icon: https://bitnami.com/assets/stacks/kafka/img/kafka-stack-1in the requirements.yaml file or dependencies entry in Chart.yaml to the charts folder. This way, requirements are updated and you'll have the correct dependencies without worrying about if you updated them also in the control version system.10x117.png
-annotations:
-  category: Infrastructure
+  - name: Apurva MAthur
+    email: mathur.ap@northeastern.edu
                                                                                                  
