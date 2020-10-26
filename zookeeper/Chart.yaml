@@ -6,7 +6,7 @@ description: A centralized service for maintaining configuration information, na
 keywords:
   - zookeeper
 sources:
-  - https://github.com/Achira-Apurva-Boran/webapp
+  - https://github.com/Achira-Apurva-Boran/app-prereq-helm-charts
 maintainers:
   - name: ApurvaMathur
     email: mathur.ap@northeastern.edu
