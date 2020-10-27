@@ -322,29 +322,35 @@ auth:
 ## When it's set to an empty array, the listeners will be configured
 ## based on the authentication protocols (auth.clientProtocol and auth.interBrokerProtocol parameters)
 ##
-listeners: PLAINTEXT://0.0.0.0:9092
+listeners: []
+## Tried this
+## listeners: PLAINTEXT://0.0.0.0:9092 
 
 ## The address(es) (hostname:port) the brokers will advertise to producers and consumers.
 ## When it's set to an empty array, the advertised listeners will be configured
 ## based on the authentication protocols (auth.clientProtocol and auth.interBrokerProtocol parameters)
 ##
-advertisedListeners: PLAINTEXT://localhost:9092
+advertisedListeners: []
+## Tried with this advertisedListeners: PLAINTEXT://localhost:9092
 
 ## The listener->protocol mapping
 ## When it's nil, the listeners will be configured
 ## based on the authentication protocols (auth.clientProtocol and auth.interBrokerProtocol parameters)
-listenerSecurityProtocolMap: PLAINTEXT:PLAINTEXT
+##
+##listenerSecurityProtocolMap: PLAINTEXT:PLAINTEXT
+
+
 ## Allow to use the PLAINTEXT listener.
 ##
 allowPlaintextListener: true
 
 ## Name of listener used for communication between brokers.
-##
-interBrokerListenerName: PLAINTEXT
+##interBrokerListenerName: PLAINTEXT
+interBrokerListenerName: INTERNAL
 
 ## Number of Kafka brokers to deploy
 ##
-replicaCount: 2
+replicaCount: 1
 
 ## StrategyType, can be set to RollingUpdate or OnDelete by default.
 ## ref: https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#updating-statefulsets
@@ -465,8 +471,6 @@ pdb:
 ##         containerPort: 1234
 ##
 sidecars: {}
-
-
 
 ## Service parameters
 ##
@@ -932,4 +936,4 @@ zookeeper:
 externalZookeeper:
   ## Server or list of external zookeeper servers to use.
   ##
-  servers: [zookeeper.default.svc.cluster.local]
+  servers: []
