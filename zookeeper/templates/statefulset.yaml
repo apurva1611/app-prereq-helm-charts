@@ -39,15 +39,6 @@ spec:
       annotations: {{- include "zookeeper.tplValue" ( dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.schedulerName }}
-      schedulerName: {{ .Values.schedulerName }}
-      {{- end }}
-      {{- include "zookeeper.imagePullSecrets" . | nindent 6 }}
-      serviceAccountName: {{ template "zookeeper.serviceAccountName" . }}
-      {{- if .Values.securityContext.enabled }}
-      securityContext:
-        fsGroup: {{ .Values.securityContext.fsGroup }}
-      {{- end }}
       {{- if .Values.affinity }}
       affinity: {{- include "zookeeper.tplValue" (dict "value" .Values.affinity "context" $) | nindent 8 }}
       {{- end }}
@@ -144,34 +135,12 @@ spec:
               {{- $zookeeperHeadlessServiceName := printf "%s-%s" $zookeeperFullname "headless" | trunc 63  }}
               {{- $clusterDomain := .Values.clusterDomain }}
               value: {{ range $i, $e := until $replicaCount }}{{ $zookeeperFullname }}-{{ $e }}.{{ $zookeeperHeadlessServiceName }}.{{ $releaseNamespace }}.svc.{{ $clusterDomain }}:{{ $followerPort }}:{{ $electionPort }} {{ end }}
-            - name: ZOO_ENABLE_AUTH
-              value: {{ ternary "yes" "no" .Values.auth.enabled | quote }}
-            {{- if .Values.auth.enabled }}
-            - name: ZOO_CLIENT_USER
-              value: {{ .Values.auth.clientUser | quote }}
-            - name: ZOO_CLIENT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ if .Values.auth.existingSecret }}{{ .Values.auth.existingSecret }}{{ else }}{{ template "zookeeper.fullname" . }}{{ end }}
-                  key: client-password
-            - name: ZOO_SERVER_USERS
-              value: {{ .Values.auth.serverUsers | quote }}
-            - name: ZOO_SERVER_PASSWORDS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ if .Values.auth.existingSecret }}{{ .Values.auth.existingSecret }}{{ else }}{{ template "zookeeper.fullname" . }}{{ end }}
-                  key: server-password
-            {{- end }}
             - name: ZOO_HEAP_SIZE
               value: {{ .Values.heapSize | quote }}
             - name: ZOO_LOG_LEVEL
               value: {{ .Values.logLevel | quote }}
             - name: ALLOW_ANONYMOUS_LOGIN
               value: {{ ternary "yes" "no" .Values.allowAnonymousLogin | quote }}
-            {{- if .Values.jvmFlags }}
-            - name: JVMFLAGS
-              value: {{ .Values.jvmFlags | quote }}
-            {{- end }}
             {{- if .Values.service.tls.client_enable }}
             - name: ZOO_TLS_CLIENT_ENABLE
               value: {{ .Values.service.tls.client_enable | quote }}
@@ -201,9 +170,6 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.name
-            {{- if .Values.extraEnvVars }}
-            {{- toYaml .Values.extraEnvVars | nindent 12 }}
-            {{- end }}
           ports:
             {{ if not .Values.service.tls.disable_base_client_port }}
             - name: client
@@ -217,7 +183,7 @@ spec:
               containerPort: {{ .Values.service.followerPort }}
             - name: election
               containerPort: {{ .Values.service.electionPort }}
-          {{- if .Values.livenessProbe.enabled }}
+          {{- if .Values.livenessProbe.enexistingClaimabled }}
           livenessProbe:
             exec:
               {{- if not .Values.service.tls.disable_base_client_port }}
@@ -257,24 +223,10 @@ spec:
               mountPath: /opt/bitnami/zookeeper/conf/zoo.cfg
               subPath: zoo.cfg
             {{- end }}
-            {{- if .Values.extraVolumeMounts }}
-            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
-            {{- end }}
       volumes:
-        {{- if .Values.config }}
-        - name: config
-          configMap:
-            name: {{ template "zookeeper.fullname" . }}
-        {{- end }}
-        {{- if and .Values.persistence.enabled .Values.persistence.existingClaim }}
-        - name: data
-          persistentVolumeClaim:
-            claimName: {{ printf "%s" (tpl .Values.persistence.existingClaim .) }}
-        {{- else if not .Values.persistence.enabled }}
         - name: data
           emptyDir: {}
-        {{- end }}
-        {{- if and .Values.persistence.enabled .Values.persistence.dataLogDir.existingClaim }}
+        {{- if .Values.persistence.enabled}}
         - name: data-log
           persistentVolumeClaim:
             claimName: {{ printf "%s" (tpl .Values.persistence.dataLogDir.existingClaim .) }}
@@ -285,9 +237,7 @@ spec:
         {{- if .Values.extraVolumes }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
-  {{- if and .Values.persistence.enabled (not (and .Values.persistence.existingClaim .Values.persistence.dataLogDir.existingClaim) )}}
   volumeClaimTemplates:
-  {{- if not .Values.persistence.existingClaim }}
     - metadata:
         name: data
         annotations:
@@ -303,8 +253,6 @@ spec:
           requests:
             storage: {{ .Values.persistence.size | quote }}
         {{- include "zookeeper.storageClass" . | nindent 8 }}
-    {{- end }}
-    {{- if and (not .Values.persistence.dataLogDir.existingClaim) .Values.dataLogDir }}
     - metadata:
         name: data-log
         annotations:
@@ -320,5 +268,4 @@ spec:
           requests:
             storage: {{ .Values.persistence.dataLogDir.size | quote }}
         {{- include "zookeeper.storageClass" . | nindent 8 }}
-    {{- end }}
-  {{- end }}
+

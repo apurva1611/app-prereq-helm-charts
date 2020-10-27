@@ -32,7 +32,6 @@ podDisruptionBudget:
 
 ## pod management
 podManagementPolicy: Parallel
-
 ## Number of ZooKeeper nodes
 ##
 replicaCount: 3
@@ -59,8 +58,6 @@ dataLogDir: ""
 
 
 ## Kubernetes configuration
-## For minikube, set this to NodePort, elsewhere use LoadBalancer
-##
 service:
   type: ClusterIP
   port: 2181
@@ -98,7 +95,6 @@ securityContext:
 persistence:
   ## A manually managed Persistent Volume and Claim
   ## If defined, PVC must be created manually before volume will be boun
-
   enabled: true
   # storageClass: "-"
   accessModes:
@@ -107,6 +103,7 @@ persistence:
   annotations: {}
   dataLogDir:
     size: 8Gi
+    existingClaim: zookeeper
 
 nodeSelector: {}
 

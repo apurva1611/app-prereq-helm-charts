@@ -12,6 +12,28 @@ helm install kafka kafka (In values.yml in externalZookeeper in servers put zook
 
 #zookepernew-zookeeper.default.svc.cluster.local
 
-export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafka,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
+ export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=zookeeper,app.kubernetes.io/instance=zookeeper,app.kubernetes.io/component=zookeeper" -o jsonpath="{.items[0].metadata.name}")
+    kubectl exec -it $POD_NAME -- zkCli.sh
 
-kubectl --namespace default eexport POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafka,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")xec -it $POD_NAME -- kafka-topics.sh --create --zookeeper zookepernew-zookeeper.default.svc.cluster.local:2181 --replication-factor 1 --partitions 1 --topic mytopic
+kubectl port-forward --namespace default svc/zookeeper 2181:2181 &
+    zkCli.sh 127.0.0.1:2181
+
+
+kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.6.0-debian-10-r57 --namespace default --command -- sleep infinity
+    kubectl exec --tty -i kafka-client --namespace default -- bash
+
+    PRODUCER:
+        kafka-console-producer.sh \
+            
+            --broker-list kafka-0.kafka-headless.default.svc.cluster.local:9092,kafka-1.kafka-headless.default.svc.cluster.local:9092,kafka-2.kafka-headless.default.svc.cluster.local:9092 \
+            --topic test
+
+    CONSUMER:
+        kafka-console-consumer.sh \
+            
+            --bootstrap-server kafka.default.svc.cluster.local:9092 \
+            --topic test \
+            --from-beginning
+
+
+helm install kafka kafka --set external.externalZookeeper.servers =zookeeper.default.svc.cluster.local
