@@ -1,9 +1,10 @@
-
+Install:
 ```
 $ helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
 $ helm install kafka -f values.yml incubator/kafka
 ```
 
+## Test
 Test client:
 ```
 $ kubectl apply -f test.yml -o yaml --dry-run=client
@@ -28,3 +29,6 @@ Cleanup:
 ```
 $ helm delete kafka
 ```
+
+## Cluster access
+kafkaURL= kafka:9092
