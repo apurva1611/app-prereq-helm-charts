@@ -1,45 +1,17 @@
-## Global Docker image parameters
-## Please, note that this will override the image parameters, including dependencies, configured to use the global value
-## Current available global Docker image parameters: imageRegistry and imagePullSecrets
-##
-# global:
-#   imageRegistry: myRegistryName
-#   imagePullSecrets:
-#     - myRegistryKeySecretName
-#   storageClass: myStorageClass
 
-## Bitnami Kafka image version
-## ref: https://hub.docker.com/r/bitnami/kafka/tags/
-##
 image:
   registry: docker.io
   repository: bitnami/kafka
   tag: 2.6.0-debian-10-r57
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
   pullPolicy: IfNotPresent
-  ## Optionally specify an array of imagePullSecrets (secrets must be manually created in the namespace)
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-  ## Example:
-  ## pullSecrets:
-  ##   - myRegistryKeySecretName
-  ##
   pullSecrets: []
 
   ## Set to true if you would like to see extra information on logs
   ##
   debug: false
 
-## String to partially override kafka.fullname template (will maintain the release name)
-##
-# nameOverride:
 
-## String to fully override kafka.fullname template
-##
-# fullnameOverride:
-
+kafkaTOpics: watch:1:1,weather:1:1
 ## Kubernetes Cluster Domain
 ##
 clusterDomain: cluster.local
@@ -52,56 +24,6 @@ commonLabels: {}
 ##
 commonAnnotations: {}
 
-## Kafka Configuration
-## Specify content for server.properties
-## NOTE: This will override any KAFKA_CFG_ environment variables (including those set by the chart)
-## The server.properties is auto-generated based on other parameters when this paremeter is not specified
-##
-## Example:
-## config: |-
-##   broker.id=-1
-##   listeners=PLAINTEXT://:9092
-##   advertised.listeners=PLAINTEXT://KAFKA_IP:9092
-##   num.network.threads=3
-##   num.io.threads=8
-##   socket.send.buffer.bytes=102400
-##   socket.receive.buffer.bytes=102400
-##   socket.request.max.bytes=104857600
-##   log.dirs=/bitnami/kafka/data
-##   num.partitions=1
-##   num.recovery.threads.per.data.dir=1
-##   offsets.topic.replication.factor=1
-##   transaction.state.log.replication.factor=1
-##   transaction.state.log.min.isr=1
-##   log.flush.interval.messages=10000
-##   log.flush.interval.ms=1000
-##   log.retention.hours=168
-##   log.retention.bytes=1073741824
-##   log.segment.bytes=1073741824
-##   log.retention.check.interval.ms=300000
-##   zookeeper.connect=ZOOKEEPER_SERVICE_NAME
-##   zookeeper.connection.timeout.ms=6000
-##   group.initial.rebalance.delay.ms=0
-##
-# config:
-
-## ConfigMap with Kafka Configuration
-## NOTE: This will override config AND any KAFKA_CFG_ environment variables.
-##
-# existingConfigmap:
-
-## Kafka Log4J Configuration
-## An optional log4j.properties file to overwrite the default of the Kafka brokers.
-## See an example log4j.properties at:
-## https://github.com/apache/kafka/blob/trunk/config/log4j.properties
-##
-# log4j:
-
-## Kafka Log4j ConfigMap
-## The name of an existing ConfigMap containing a log4j.properties file.
-## NOTE: this will override log4j.
-##
-# existingLog4jConfigMap:
 
 ## Kafka's Java Heap size
 ##
@@ -232,16 +154,6 @@ extraDeploy: []
 ## https://github.com/bitnami/bitnami-docker-kafka#security
 ##
 auth:
-  ## Authentication protocol for client and inter-broker communications
-  ## Supported values: 'plaintext', 'tls', 'mtls', 'sasl' and 'sasl_tls'
-  ## This table shows the security provided on each protocol:
-  ## | Method    | Authentication                | Encryption via TLS |
-  ## | plaintext | None                          | No                 |
-  ## | tls       | None                          | Yes                |
-  ## | mtls      | Yes (two-way authentication)  | Yes                |
-  ## | sasl      | Yes (via SASL)                | No                 |
-  ## | sasl_tls  | Yes (via SASL)                | Yes                |
-  ##
   clientProtocol: plaintext
   interBrokerProtocol: plaintext
 
@@ -252,27 +164,7 @@ auth:
   ##
   saslInterBrokerMechanism: plain
 
-  ## Name of the existing secret containing the truststore and
-  ## one keystore per Kafka broker you have in the Kafka cluster.
-  ## MANDATORY when 'tls', 'mtls', or 'sasl_tls' authentication protocols are used.
-  ## Create this secret following the steps below:
-  ## 1) Generate your trustore and keystore files. Helpful script: https://raw.githubusercontent.com/confluentinc/confluent-platform-security-tools/master/kafka-generate-ssl.sh
-  ## 2) Rename your truststore to `kafka.truststore.jks`.
-  ## 3) Rename your keystores to `kafka-X.keystore.jks` where X is the ID of each Kafka broker.
-  ## 4) Run the command below where SECRET_NAME is the name of the secret you want to create:
-  ##       kubectl create secret generic SECRET_NAME --from-file=./kafka.truststore.jks --from-file=./kafka-0.keystore.jks --from-file=./kafka-1.keystore.jks ...
-  ## Alternatively, you can put your JKS files under the files/jks directory
-  ##
-  # jksSecret:
 
-  ## Password to access the JKS files when they are password-protected.
-  ##
-  # jksPassword:
-
-  ## The endpoint identification algorithm used by clients to validate server host name.
-  ## Disable server host name verification by setting it to an empty string
-  ## See: https://docs.confluent.io/current/kafka/authentication_ssl.html#optional-settings
-  ##
   tlsEndpointIdentificationAlgorithm: https
 
   ## JAAS configuration for SASL authentication

@@ -35,13 +35,8 @@ Create chart name and version as used by the chart label.
  Create the name of the service account to use
  */}}
 {{- define "zookeeper.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "zookeeper.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
+{{- "zookeeper.fullname" -}}
 {{- end -}}
-{{- end -}}
-
 {{/*
 Return the proper Zookeeper image name
 */}}
