@@ -107,7 +107,7 @@ tickTime: 2000
 
 ## ZooKeeper uses to limit the length of time the ZooKeeper servers in quorum have to connect to a leader
 ##
-initLimit: 10## The Policy ## Zookeeper Prometheus Exporter configuration
+##initLimit: 10## The Policy ## Zookeeper Prometheus Exporter configuration
 ##
 metrics:
   enabled: false
