@@ -12,6 +12,10 @@ keywords:
 sources:
   - https://github.com/Achira-Apurva-Boran/app-prereq-helm-charts
 maintainers:
-  - name: Apurva MAthur
+  - name: ApurvaMathur
     email: mathur.ap@northeastern.edu
+  - name: AchiraShah
+    email: shah.ac@northeastern.edu
+  - name: Boran
+    email: boran@northeastern.edu
                                                                                                  

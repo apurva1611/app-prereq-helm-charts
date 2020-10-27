@@ -824,4 +824,4 @@ zookeeper:
 externalZookeeper:
   ## Server ochart.metadatar list of external zookeeper servers to use.
   ##
-  servers: [zookeper-zookeeper.default.svc.cluster.local]
+  servers: []
