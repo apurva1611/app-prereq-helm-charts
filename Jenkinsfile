@@ -26,7 +26,7 @@ def helmInstallZookeeper (zookeeperReleaseName) {
 
     script {
        // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "helm upgrade --install ${zookeeperReleaseName} --namespace=api --set secret.awscred.aws_key=${env.awsKey},secret.awscred.secret_key=${env.awsSecret},secret.regcred.dockerconfigjson=${env.dockerString} --debug ./back-end/"
+       sh "helm upgrade --install ${zookeeperReleaseName} --namespace=api --set secret.awscred.aws_key=${env.awsKey},secret.awscred.secret_key=${env.awsSecret} --debug ./back-end/"
     }
 }
 
