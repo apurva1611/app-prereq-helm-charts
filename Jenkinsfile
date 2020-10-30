@@ -19,90 +19,66 @@ def createNamespace (name) {
 }
 
 /*
-    Helm install Zookeeper application
+    Helm install kafka application
 */
-def helmInstallZookeeper (zookeeperReleaseName) {
-    echo "Installing zookeeper application"
+def helmDryrunKafka (kafkaReleaseName) {
+    echo "Installing kafka application"
 
     script {
+       sh "/usr/local/bin/helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator"
        // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "helm upgrade --install ${zookeeperReleaseName} --namespace=api --set secret.awscred.aws_key=${env.awsKey},secret.awscred.secret_key=${env.awsSecret} --debug ./back-end/"
+       sh "/usr/local/bin/helm upgrade --dry-run --debug --install kafka -f values.yml incubator/${kafkaReleaseName} --namespace=api --debug ./incubator-kafka/"
+
+       sh "kubectl apply -f test.yml -o yaml --namespace=api --dry-run=client"
     }
 }
 
 /*
-    Helm install Kafka application
+    Helm install kafka application
 */
-def helmInstallKafka (kafkaReleaseName, zookeeperReleaseName) {
+def helmInstallKafka (kafkaReleaseName) {
     echo "Installing kafka application"
 
     script {
-       sh "sleep 50"
-       echo "Finding zookeeperip"
-       zookeeperIp = sh(returnStdout: true, script: "kubectl describe services zookeeper-back-end --namespace=api | grep elb.amazonaws.com | grep LoadBalancer | awk '{print \$3}' | tr -d '\n'")
-       echo "${zookeeperIp}"
-       sh "helm upgrade --install ${kafkaReleaseName} --namespace=ui --set intiContainer.zookeeperDependencyEndpoint=${zookeeperReleaseName}-back-end.api.svc.cluster.local,configmap.zookeeperIp='http://${zookeeperIp}:3000',secret.regcred.dockerconfigjson=${env.dockerString} --debug ./front-end/"
+       sh "/usr/local/bin/helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator" 
+       // sh "helm repo add helm ${HELM_REPO}; helm repo update"
+       sh "/usr/local/bin/helm upgrade --install kafka -f values.yml incubator/${kafkaReleaseName --namespace=api --debug ./incubator-kafka/"
+
+       sh "kubectl apply -f test.yml -o yaml --namespace=api"
     }
 }
 
 node {
-     def zookeeperIp
-     def changedFiles
-     def zookeeperReleaseName = "zookeeper"
+
      def kafkaReleaseName = "kafka"
-     def kubernetesCredentials = 'KubeCreds'
+
 
     stage('Clone repository') {
         /* Cloning the Repository to our Workspace */
-                checkout scm
-                sh 'git diff --name-only --diff-filter=ADMR @~..@ > output.txt'
-                changedFiles = readFile 'output.txt'
-                echo "Changed files - ${changedFiles}"
-            }
+        checkout scm
 
-    stage('Startup activities'){
-    echo "${env.ServerUrl}"
-    withKubeConfig([credentialsId: kubernetesCredentials,
-                        serverUrl: "${env.ServerUrl}"
-                        ]) {
-          sh "kubectl cluster-info"
+
+        sh "export aws_access_key_id=${env.awsKey}"
+        sh "export aws_secret_access_key=${env.awsSecret}"
+        sh "export aws_profile=${env.aws_profile}"
+        sh "export aws_region=${env.aws_region}"
+        sh "export KOPS_STATE_STORE=${env.S3BucketName}"
+        sh "AWS_PROFILE=${env.aws_profile} AWS_ACCESS_KEY_ID=${env.awsKey} AWS_SECRET_ACCESS_KEY=${env.awsSecret} kops export kubecfg ${env.YOUR_CLUSTER_NAME} --state=${env.S3BucketName}"
+        
     }
 
-
-     // Init helm client
-     sh "helm init"
+    try {
+        stage ('helm test') {
+            helmDryrunKafka (kafkaReleaseName)
+        }
+        stage('Deploy Kafka'){
+               createNamespace('api')
+                helmInstallKafka(kafkaReleaseName)
+            }
+        }
+        catch (Exception err){
+            err_msg = "Test had Exception(${err})"
+            currentBuild.result = 'FAILURE'
+            error "FAILED - Stopping build for Error(${err_msg})"
     }
-
-         stage('Deploy zookeeper'){
-            if (changedFiles?.trim().contains("back-end"))
-             {
-                echo "Deploying zookeeper"
-                withKubeConfig([credentialsId: kubernetesCredentials,
-                                 serverUrl: "${env.ServerUrl}"
-                              ]) {
-                       createNamespace('api')
-                       helmInstallZookeeper(zookeeperReleaseName)
-                }
-
-            }else{
-                echo "Nothing to deploy in zookeeper"
-            }
-          }
-
-         stage('Deploy kafka'){
-            if (changedFiles?.trim().contains("front-end"))
-            {
-              echo "Deploying kafka"
-              withKubeConfig([credentialsId: kubernetesCredentials,
-                                 serverUrl: "${env.ServerUrl}"
-                              ]) {
-               createNamespace('ui')
-               helmInstallKafka(kafkaReleaseName, zookeeperReleaseName)
-              }
-            }
-            else{
-                echo "Nothing to deploy in kafka"
-            }
-         }
-
- }
+}
