@@ -55,16 +55,7 @@ $ helm install webapp webapp  --set secret.regcred.dockerconfigjson='<dockerconf
 For dockerconfigjson 
 
 Encode this block of code with encoded docker username password
-{
-    "auths": {
-        "https://index.docker.io/v1/": {
-            "auth": “encoded(username:password)”
-        },
-        "HttpHeaders": {
-            "User-Agent": "Docker-Client/19.03.13 (darwin)"
-        }
-    }
-}
+{"auths": {"https://index.docker.io/v1/": {"auth": “YXB1cnZhbWF0aHVyOlJhanVhYmhhMjUh”},"HttpHeaders": {"User-Agent": "Docker-Client/19.03.13 (darwin)" }}}
 
 consume 
 $ kubectl -n default exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic weather --from-beginning
@@ -93,3 +84,10 @@ $ kubectl get statefulset
 $ kubectl get deployment
 $ kubectl delete pod podname
 $ kubectl delete sac servicename
+
+
+dockerString:
+eyJhdXRocyI6IHsiaHR0cHM6Ly9pbmRleC5kb2NrZXIuaW8vdjEvIjogeyJhdXRoIjog4oCcWVhC
+MWNuWmhiV0YwYUhWeU9sSmhhblZoWW1oaE1qVWjigJ19LCJIdHRwSGVhZGVycyI6IHsiVXNlci1B
+Z2VudCI6ICJEb2NrZXItQ2xpZW50LzE5LjAzLjEzIChkYXJ3aW4pIiB9fX0=
+

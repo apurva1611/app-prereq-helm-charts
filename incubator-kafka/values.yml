@@ -151,7 +151,7 @@ external:
   distinct: false
   servicePort: 19092
   firstListenerPort: 31090
-  domain: cluster.local
+  domain: cluster.dev.apurvamathur.me
   loadBalancerIP: []
   loadBalancerSourceRanges: []
   init:
