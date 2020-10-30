@@ -70,13 +70,11 @@ node {
     }
 
     try {
-        dir("/incubator-kafka") {
-            sh "pwd"
-            stage ('helm test') {
+
+        stage ('helm test') {
                 echo "$pwd"
                 helmDryrunKafka (kafkaReleaseName)
             }
-        }
 
         stage('Deploy Kafka'){
                 createNamespace('api')
