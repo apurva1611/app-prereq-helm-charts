@@ -1,0 +1,148 @@
+
+image:
+  registry: docker.io
+  repository: bitnami/zookeeper
+  tag: 3.6.2-debian-10-r37
+  pullPolicy: IfNotPresent
+  debug: false
+
+## Kubernetes Cluster Domain
+clusterDomain: cluster.local
+
+## Add labels to all the deployed resources
+
+commonLabels: {}
+## Add annotations to all the deployed resource
+commonAnnotations: {}
+
+## Init containers parameters:
+volumePermissions:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: bitnami/minideb
+    tag: buster
+    pullPolicy: Always
+  resources: {}
+
+updateStrategy: RollingUpdate
+
+podDisruptionBudget:
+  maxUnavailable: 1
+
+## pod management
+podManagementPolicy: Parallel
+## Number of ZooKeeper nodes
+##
+replicaCount: 3
+tickTime: 2000
+syncLimit: 5
+maxClientCnxns: 60
+fourlwCommandsWhitelist: srvr, mntr, ruok
+listenOnAllIPs: false
+allowAnonymousLogin: true
+
+autopurge:
+  snapRetainCount: 3
+  purgeInterval: 0
+
+maxSessionTimeout: 40000
+
+auth:
+  enabled: false
+
+heapSize: 1024
+logLevel: ERROR
+
+dataLogDir: ""
+
+
+## Kubernetes configuration
+service:
+  type: ClusterIP
+  port: 2181
+  followerPort: 2888
+  electionPort: 3888
+  publishNotReadyAddresses: true
+  tls:
+    client_enable: false
+    quorum_enable: false
+    disable_base_client_port: false
+
+    client_port: 3181
+
+    client_keystore_path: /tls_key_store/key_store_file
+    client_keystore_password: ""
+    client_truststore_path: /tls_trust_store/trust_store_file
+    client_truststore_password: ""
+
+    quorum_keystore_path: /tls_key_store/key_store_file
+    quorum_keystore_password: ""
+    quorum_truststore_path: /tls_trust_store/trust_store_file
+    quorum_truststore_password: ""
+  annotations: {}
+  headless:
+    annotations: {}
+
+
+## Zookeeper Pod Security Context
+securityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001
+
+## Zookeeper data Persistent Volume Storage Class
+persistence:
+  ## A manually managed Persistent Volume and Claim
+  ## If defined, PVC must be created manually before volume will be boun
+  enabled: true
+  # storageClass: "-"
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+  annotations: {}
+  dataLogDir:
+    size: 8Gi
+    existingClaim: zookeeper
+
+nodeSelector: {}
+
+tolerations: []
+
+podLabels: {}
+
+## Annotations
+
+podAnnotations: {}
+
+
+priorityClassName: ""
+
+
+affinity: {}
+
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 250m
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+  probeCommandTimeout: 2
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+  probeCommandTimeout: 2
+
+networkPolicy:
+  enabled: false

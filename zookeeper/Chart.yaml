@@ -1,0 +1,18 @@
+apiVersion: v1
+name: zookeeper
+version: 5.22.2
+appVersion: 3.6.2
+description: A centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services for distributed applications.
+keywords:
+  - zookeeper
+sources:
+  - https://github.com/Achira-Apurva-Boran/app-prereq-helm-charts
+maintainers:
+  - name: ApurvaMathur
+    email: mathur.ap@northeastern.edu
+  - name: AchiraShah
+    email: shah.ac@northeastern.edu
+  - name: Boran
+    email: boran@northeastern.edu
+annotations:
+  category: Infrastructure
