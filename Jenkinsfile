@@ -27,7 +27,7 @@ def helmDryrunKafka (kafkaReleaseName) {
     script {
        sh "/usr/local/bin/helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator"
        // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "/usr/local/bin/helm upgrade --dry-run --debug --install kafka -f values.yml incubator/${kafkaReleaseName} --namespace=api --debug ./app-prereq-helm-charts/incubator-kafka/"
+       sh "/usr/local/bin/helm --install kafka -f values.yml incubator/${kafkaReleaseName} --namespace=api --dry-run --debug ./app-prereq-helm-charts/incubator-kafka/"
 
        sh "kubectl apply -f test.yml -o yaml --namespace=api --dry-run=client"
     }
@@ -42,7 +42,7 @@ def helmInstallKafka (kafkaReleaseName) {
     script {
        sh "/usr/local/bin/helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator" 
        // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "/usr/local/bin/helm upgrade --install kafka -f values.yml incubator/${kafkaReleaseName} --namespace=api --debug ./app-prereq-helm-charts/incubator-kafka/"
+       sh "/usr/local/bin/helm --install kafka -f values.yml incubator/${kafkaReleaseName} --namespace=api --debug ./app-prereq-helm-charts/incubator-kafka/"
 
        sh "kubectl apply -f test.yml -o yaml --namespace=api"
     }
