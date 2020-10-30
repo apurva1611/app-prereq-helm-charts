@@ -26,8 +26,10 @@ def helmDryrunKafka (kafkaReleaseName) {
 
     script {
        sh "/usr/local/bin/helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator"
+
+       // need to be i this dir incubator-kafka
        // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "/usr/local/bin/helm install kafka -f values.yml incubator/${kafkaReleaseName} --namespace=api --dry-run --debug"
+       sh "/usr/local/bin/helm install kafka -f incubator-kafka/values.yml incubator/${kafkaReleaseName} --namespace=api --dry-run --debug "
 
        sh "kubectl apply -f test.yml -o yaml --namespace=api --dry-run=client"
     }
