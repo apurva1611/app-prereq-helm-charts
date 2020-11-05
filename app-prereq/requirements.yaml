@@ -8,9 +8,9 @@ dependencies:
 - name: kibana
   version: 7.9.3
   repository: https://helm.elastic.co
-- name: fluentd
-  version: 2.5.1
-  repository: https://charts.helm.sh/stable
+- name: fluentd-elasticsearch
+  version: 11.0.1
+  repository: https://kokuwaio.github.io/helm-charts
 - name: prometheus
   version: 11.16.7
   repository: https://prometheus-community.github.io/helm-charts
