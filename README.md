@@ -37,3 +37,6 @@ kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.6.0
 
 
 helm install kafka kafka --set external.externalZookeeper.servers =zookeeper.default.svc.cluster.local
+
+
+demo chagnes for assignment6
