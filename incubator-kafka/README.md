@@ -12,14 +12,14 @@ $ kubectl apply -f test.yml -o yaml --dry-run=client
 
 Listen messages:
 ```
-$ kubectl -n default exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic weather --from-beginning
-$ kubectl -n default exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic watch --from-beginning
+$ kubectl -n api exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic weather --from-beginning
+$ kubectl -n api exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic watch --from-beginning
 ```
 
 Interactive message producer:
 ```
-$ kubectl -n default exec -ti testclient -- /usr/bin/kafka-console-producer --broker-list kafka-headless:9092 --topic weather
-$ kubectl -n default exec -ti testclient -- /usr/bin/kafka-console-producer --broker-list kafka-headless:9092 --topic watch
+$ kubectl -n api exec -ti testclient -- /usr/bin/kafka-console-producer --broker-list kafka-headless:9092 --topic weather
+$ kubectl -n api exec -ti testclient -- /usr/bin/kafka-console-producer --broker-list kafka-headless:9092 --topic watch
 ```
 
 List kafka-topics on test:
