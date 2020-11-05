@@ -1,0 +1,24 @@
+dependencies:
+- name: kafka
+  repository: https://charts.helm.sh/incubator
+  version: 0.21.2
+- name: elasticsearch
+  repository: https://helm.elastic.co
+  version: 7.9.3
+- name: kibana
+  repository: https://helm.elastic.co
+  version: 7.9.3
+- name: fluentd
+  repository: https://charts.helm.sh/stable
+  version: 2.5.1
+- name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 11.16.7
+- name: alertmanager
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 0.1.4
+- name: grafana
+  repository: https://grafana.github.io/helm-charts
+  version: 6.1.2
+digest: sha256:a12800086a6fdbb7af67b5d063cdd1a3d61dbdd967bdf3f4ea227770d205e727
+generated: "2020-11-05T15:47:24.012303+03:00"
