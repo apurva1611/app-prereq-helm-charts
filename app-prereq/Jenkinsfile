@@ -29,7 +29,7 @@ def helmDryrunAppPrereq () {
        sh "/usr/local/bin/helm dependency update"
 
        // "helm repo add helm ${HELM_REPO}; helm repo update dryrun"
-       sh "/usr/local/bin/helm upgrade --install app-prereq ../app-prereq --dry-run --debug"
+       sh "/usr/local/bin/helm upgrade --install app-prereq app-prereq --dry-run --debug"
     }
 }
 
