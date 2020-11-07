@@ -26,7 +26,7 @@ def helmDryrunAppPrereq () {
 
     script {
        // get dependency 
-       sh "/usr/local/bin/helm dependency update"
+       sh "/usr/local/bin/helm dependency update ./app-prereq/"
 
        // "helm repo add helm ${HELM_REPO}; helm repo update dryrun"
        sh "/usr/local/bin/helm upgrade --install app-prereq app-prereq --dry-run --debug"
@@ -41,10 +41,10 @@ def helmInstallAppPrereq () {
 
     script {
         // "helm repo add helm ${HELM_REPO}; helm repo update"
-        sh "/usr/local/bin/helm upgrade --install app-prereq ../app-prereq"
+        sh "/usr/local/bin/helm upgrade --install app-prereq app-prereq"
         
         // install testclient kafka pod
-        sh "kubectl apply -f test.yml -o yaml "
+        sh "kubectl apply -f ./app-prereq/test.yml -o yaml "
     }
 }
 
