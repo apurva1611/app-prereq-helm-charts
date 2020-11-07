@@ -1,0 +1,9 @@
+groups:
+- name: ./rules.conf
+  rules:
+
+  # heartbeat alert
+  - alert: Heartbeat
+    expr: vector(1)
+    labels:
+      severity: informational
