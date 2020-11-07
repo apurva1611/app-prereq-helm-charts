@@ -15,6 +15,10 @@ Change directory to one level up, then run
 ```
 helm install app-prereq app-prereq
 ```
+or
+```
+helm upgrade --install app-prereq app-prereq
+```
 
 ### Kibana
 ```
