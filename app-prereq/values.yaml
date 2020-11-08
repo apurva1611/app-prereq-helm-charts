@@ -553,7 +553,7 @@ kafka:
 # ------------------------------------------------------------------------------
 
 zookeeper:
-  replicaCount: 1
+  replicaCount: 3
   ## If true, install the Zookeeper chart alongside Kafka
   ## ref: https://github.com/kubernetes/charts/tree/master/incubator/zookeeper
   enabled: true
