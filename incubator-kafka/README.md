@@ -12,19 +12,19 @@ $ kubectl apply -f test.yml -o yaml --dry-run=client
 
 Listen messages:
 ```
-$ kubectl -n api exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic weather --from-beginning
-$ kubectl -n api exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic watch --from-beginning
+$ kubectl exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server app-prereq-kafka:9092 --topic weather --from-beginning
+$ kubectl exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server app-prereq-kafka:9092 --topic watch --from-beginning
 ```
 
 Interactive message producer:
 ```
-$ kubectl -n api exec -ti testclient -- /usr/bin/kafka-console-producer --broker-list kafka-headless:9092 --topic weather
-$ kubectl -n api exec -ti testclient -- /usr/bin/kafka-console-producer --broker-list kafka-headless:9092 --topic watch
+$ kubectl exec -ti testclient -- /usr/bin/kafka-console-producer --broker-list app-prereq-kafka-headless:9092 --topic weather
+$ kubectl exec -ti testclient -- /usr/bin/kafka-console-producer --broker-list app-prereq-kafka-headless:9092 --topic watch
 ```
 
 List kafka-topics on test:
 ```
-$ kubectl -n default exec testclient -- /usr/bin/kafka-topics --zookeeper kafka-zookeeper:2181 --list
+$ kubectl -n default exec testclient -- /usr/bin/kafka-topics --zookeeper app-prereq-zookeeper:2181 --list
 ```
 
 Cleanup:
