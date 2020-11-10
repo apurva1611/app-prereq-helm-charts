@@ -84,7 +84,7 @@ affinity: {}
 
 kafka:
   ## Kafka Brokers The StatefulSet installs 3 pods by default
-  replicas: 3
+  replicas: 1
 
   ## The kafka image repository
   image: "confluentinc/cp-kafka"
@@ -553,7 +553,7 @@ kafka:
 # ------------------------------------------------------------------------------
 
 zookeeper:
-  replicaCount: 3
+  replicaCount: 1
   ## If true, install the Zookeeper chart alongside Kafka
   ## ref: https://github.com/kubernetes/charts/tree/master/incubator/zookeeper
   enabled: true
@@ -665,22 +665,32 @@ prometheus:
     global:
       scrape_interval:     15s
       evaluation_interval: 15s
+      scrape_timeout: 10s
+
+    # alerting:
+    #   alertmanagers:
+    #     tls_config:
+    #       insecure_skip_verify: true  
   
   serverFiles:
 
     prometheus.yml:
-      rule_files:
-        - "prometheus.rules.yml"
+      # rule_files:
+      #   - /etc/config/recording_rules.yml
+      #   - /etc/config/alerting_rules.yml
+      # ## Below two files are DEPRECATED will be removed from this default values file
+      #   - /etc/config/rules
+      #   - /etc/config/alerts
 
       scrape_configs:
         - job_name: webapp
 
-          scrape_interval: 5s
-          scrape_timeout: 2s
+          scrape_interval: 10s
+          scrape_timeout: 10s
           honor_labels: true
 
           static_configs:
-            - targets: ['webapp:8080']
+            - targets: ['webapp:8080']        
   
 # ------------------------------------------------------------------------------
 # alertmanager:
