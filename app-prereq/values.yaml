@@ -598,8 +598,9 @@ zookeeper:
 
 elasticsearch:
   # Prod: replicas: 3, minimumMasterNodes:2
-  replicas: 1
-  minimumMasterNodes: 1
+  replicas: 3
+  minimumMasterNodes: 2
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
   esJavaOpts: "-Xmx1g -Xms1g"
 
@@ -690,7 +691,7 @@ prometheus:
           honor_labels: true
 
           static_configs:
-            - targets: ['webapp:8080']        
+            - targets: ['a6b9bbe882cfe48d383816781bb8f825-1014509785.us-east-1.elb.amazonaws.com:8080']        
   
 # ------------------------------------------------------------------------------
 # alertmanager:
