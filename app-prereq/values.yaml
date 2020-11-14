@@ -655,6 +655,11 @@ kibana:
 # ------------------------------------------------------------------------------
 
 #fluentd:
+fluentd-elasticsearch:
+  elasticsearch:
+    hosts: ["elasticsearch-master:9200"]
+    host: 'elasticsearch-master'
+    port: 9200
   
 # ------------------------------------------------------------------------------
 # prometheus:
