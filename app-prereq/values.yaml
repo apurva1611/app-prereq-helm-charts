@@ -256,7 +256,7 @@ kafka:
   ## ref: https://kafka.apache.org/documentation/#brokerconfigs
   ##
   configurationOverrides:
-    "confluent.support.metrics.enable": false  # Disables confluent metric submission
+    "confluent.support.metrics.enable": true  # Disables confluent metric submission
     # "auto.leader.rebalance.enable": true
     "auto.create.topics.enable": true
     # "controlled.shutdown.enable": true
@@ -358,7 +358,7 @@ kafka:
   prometheus:
     ## Prometheus JMX Exporter: exposes the majority of Kafkas metrics
     jmx:
-      enabled: false
+      enabled: true
 
       ## The image to use for the metrics collector
       image: solsson/kafka-prometheus-jmx-exporter@sha256
@@ -385,7 +385,7 @@ kafka:
 
     ## Prometheus Kafka Exporter: exposes complimentary metrics to JMX Exporter
     kafka:
-      enabled: false
+      enabled: true
 
       ## The image to use for the metrics collector
       image: danielqsj/kafka-exporter
@@ -446,11 +446,12 @@ kafka:
 
     operator:
       ## Are you using Prometheus Operator?
-      enabled: false
+      enabled: true
 
       serviceMonitor:
         # Namespace in which to install the ServiceMonitor resource.
         namespace: monitoring
+        # namespace: default
         # Use release namespace instead
         releaseNamespace: false
 
@@ -462,10 +463,11 @@ kafka:
 
       prometheusRule:
         ## Add Prometheus Rules?
-        enabled: false
+        enabled: true
 
         ## Namespace in which to install the PrometheusRule resource.
         namespace: monitoring
+        # namespace: default
         # Use release namespace instead
         releaseNamespace: false
 
@@ -600,13 +602,13 @@ elasticsearch:
   # Prod: replicas: 3, minimumMasterNodes:2
   replicas: 3
   minimumMasterNodes: 2
-  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+  clusterHealthCheckParams: "wait_for_status=green&timeout=60s"
 
   esJavaOpts: "-Xmx1g -Xms1g"
 
   resources:
     requests:
-      cpu: "1000m"
+      cpu: "550m"
       memory: "1Gi"
     limits:
       cpu: "1000m"
@@ -631,11 +633,13 @@ elasticsearch:
 # ------------------------------------------------------------------------------
 
 kibana:
+#  elasticsearchHosts: "http://elasticsearch-master:9200"
+
   replicas: 1
 
   resources:
     requests:
-      cpu: "1000m"
+      cpu: "500m"
       memory: "1Gi"
     limits:
       cpu: "1000m"
@@ -655,12 +659,14 @@ kibana:
 # fluentd:
 # ------------------------------------------------------------------------------
 
-#fluentd:
 fluentd-elasticsearch:
   elasticsearch:
     hosts: ["elasticsearch-master:9200"]
     host: 'elasticsearch-master'
     port: 9200
+    # logstash_format: true
+    # logstash_prefix: 'logstash'
+    # index_name: fluentd.${tag}.%Y%m%d  
   
 # ------------------------------------------------------------------------------
 # prometheus:
@@ -681,12 +687,12 @@ prometheus:
   serverFiles:
 
     prometheus.yml:
-      # rule_files:
-      #   - /etc/config/recording_rules.yml
-      #   - /etc/config/alerting_rules.yml
-      # ## Below two files are DEPRECATED will be removed from this default values file
-      #   - /etc/config/rules
-      #   - /etc/config/alerts
+      rule_files:
+        - /etc/config/recording_rules.yml
+        - /etc/config/alerting_rules.yml
+      ## Below two files are DEPRECATED will be removed from this default values file
+        - /etc/config/rules
+        - /etc/config/alerts
 
       scrape_configs:
         - job_name: webapp
@@ -696,7 +702,32 @@ prometheus:
           honor_labels: true
 
           static_configs:
-            - targets: ['a6b9bbe882cfe48d383816781bb8f825-1014509785.us-east-1.elb.amazonaws.com:8080']        
+            - targets: ['webapp:8080'] 
+        - job_name: eexporter
+          
+          scrape_interval: 10s
+          scrape_timeout: 10s  
+          honor_labels: true
+
+          static_configs:
+            - targets: ['elasticsearch-exporter-prometheus-elasticsearch-exporter:9108']
+        - job_name: kafka-exporter
+          
+          scrape_interval: 10s
+          scrape_timeout: 10s  
+          honor_labels: true
+
+          static_configs:
+            - targets: ['app-prereq-kafka-exporter:9308']
+        - job_name: jmx-exporter
+          
+          scrape_interval: 10s
+          scrape_timeout: 10s  
+          honor_labels: true
+
+          static_configs:
+            - targets: ['app-prereq-kafka:5555']             
+                         
   
 # ------------------------------------------------------------------------------
 # alertmanager:
@@ -709,3 +740,12 @@ prometheus:
 # ------------------------------------------------------------------------------
 
 #grafana:
+
+# ------------------------------------------------------------------------------
+# prometheus-elasticsearch-exporter:
+# ------------------------------------------------------------------------------
+
+# prometheus-elasticsearch-exporter:
+#   serviceMonitor:
+#     enabled: false
+
