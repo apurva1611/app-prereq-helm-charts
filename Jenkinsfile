@@ -19,40 +19,66 @@ def createNamespace (name) {
 }
 
 /*
-    Helm install kafka application
+    Helm install elasticsearch-exporter application
 */
-def helmDryrunKafka (kafkaReleaseName) {
-    echo "Installing kafka application"
+def helmDryrunElasticsearchExporter (ElasticsearchExporterReleaseName) {
+    echo "Installing ElasticsearchExporter application"
 
     script {
-       sh "/usr/local/bin/helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator"
+       sh "/usr/local/bin/helm repo add prometheus-community https://prometheus-community.github.io/helm-charts"
 
-       // need to be i this dir incubator-kafka
        // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "/usr/local/bin/helm upgrade --install kafka -f incubator-kafka/values.yml incubator/${kafkaReleaseName} --namespace=api --dry-run --debug "
-
-       sh "kubectl apply -f incubator-kafka/test.yml -o yaml --namespace=api --dry-run=client"
+       sh "/usr/local/bin/helm upgrade --install elasticsearch-exporter -f elasticsearch-exporter/values.yml prometheus-community/prometheus-elasticsearch-exporter --namespace=api --dry-run --debug"
     }
 }
 
 /*
-    Helm install kafka application
+    Helm install ElasticsearchExporter application
 */
-def helmInstallKafka (kafkaReleaseName) {
-    echo "Installing kafka application"
+def helmInstallElasticsearchExporter (ElasticsearchExporterReleaseName) {
+    echo "Installing ElasticsearchExporter application"
 
     script {
-       sh "/usr/local/bin/helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator" 
-       // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "/usr/local/bin/helm upgrade --install kafka -f incubator-kafka/values.yml incubator/${kafkaReleaseName} --namespace=api --debug"
+       sh "/usr/local/bin/helm repo add prometheus-community https://prometheus-community.github.io/helm-charts"
 
-       sh "kubectl apply -f incubator-kafka/test.yml -o yaml --namespace=api"
+       // sh "helm repo add helm ${HELM_REPO}; helm repo update"
+       sh "/usr/local/bin/helm upgrade --install elasticsearch-exporter -f elasticsearch-exporter/values.yml prometheus-community/prometheus-elasticsearch-exporter --namespace=api --dry-run --debug"
+    }
+}
+
+/*
+    Helm dry-run AppPreReq application
+*/
+def helmDryrunAppPrereq () {
+    echo "Installing AppPreReq application"
+
+    script {
+       // get dependency 
+       sh "/usr/local/bin/helm dependency update app-prereq/"
+
+       // "helm repo add helm ${HELM_REPO}; helm repo update dryrun"
+       sh "/usr/local/bin/helm upgrade --install app-prereq app-prereq --namespace=api --dry-run --debug"
+    }
+}
+
+/*
+    Helm install AppPreReq application
+*/
+def helmInstallAppPrereq () {
+    echo "Installing AppPreReq application"
+
+    script {
+        // "helm repo add helm ${HELM_REPO}; helm repo update"
+        sh "/usr/local/bin/helm upgrade --install app-prereq app-prereq --namespace=api"
+        
+        // install testclient kafka pod
+        sh "kubectl apply -f app-prereq/test.yml -o yaml "
     }
 }
 
 node {
 
-     def kafkaReleaseName = "kafka"
+     def ElasticsearchExporterReleaseName = "elasticsearch-exporter"
 
 
     stage('Clone repository') {
@@ -70,16 +96,25 @@ node {
     }
 
     try {
+        stage ('helm test') {
+                echo "$pwd"
+                helmDryrunAppPrereq ()
+            }
+
+        stage('Deploy AppPrereq'){
+                createNamespace('monitoring')            
+                helmInstallAppPrereq ()
+            } 
 
         stage ('helm test') {
                 echo "$pwd"
-                helmDryrunKafka (kafkaReleaseName)
+                helmDryrunElasticsearchExporter (ElasticsearchExporterReleaseName)
             }
 
-        stage('Deploy Kafka'){
-                createNamespace('api')
-                helmInstallKafka(kafkaReleaseName)
+        stage('Deploy ElasticsearchExporter'){
+                helmInstallElasticsearchExporter(ElasticsearchExporterReleaseName)
             }
+   
         }
         catch (Exception err){
             err_msg = "Test had Exception(${err})"
