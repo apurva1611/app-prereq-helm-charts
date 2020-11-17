@@ -446,7 +446,7 @@ kafka:
 
     operator:
       ## Are you using Prometheus Operator?
-      enabled: true
+      enabled: false
 
       serviceMonitor:
         # Namespace in which to install the ServiceMonitor resource.
