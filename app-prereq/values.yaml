@@ -702,7 +702,7 @@ prometheus:
           honor_labels: true
 
           static_configs:
-            - targets: ['webapp:8080'] 
+            - targets: ['webapp.api:8080'] 
         - job_name: eexporter
           
           scrape_interval: 10s
