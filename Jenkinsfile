@@ -28,7 +28,7 @@ def helmDryrunElasticsearchExporter (ElasticsearchExporterReleaseName) {
        sh "/usr/local/bin/helm repo add prometheus-community https://prometheus-community.github.io/helm-charts"
 
        // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "/usr/local/bin/helm upgrade --install elasticsearch-exporter -f elasticsearch-exporter/values.yml prometheus-community/prometheus-elasticsearch-exporter --namespace=api --dry-run --debug"
+       sh "/usr/local/bin/helm upgrade --install elasticsearch-exporter -f elasticsearch-exporter/values.yml prometheus-community/prometheus-elasticsearch-exporter --namespace=monitoring --dry-run --debug"
     }
 }
 
@@ -42,7 +42,7 @@ def helmInstallElasticsearchExporter (ElasticsearchExporterReleaseName) {
        sh "/usr/local/bin/helm repo add prometheus-community https://prometheus-community.github.io/helm-charts"
 
        // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "/usr/local/bin/helm upgrade --install elasticsearch-exporter -f elasticsearch-exporter/values.yml prometheus-community/prometheus-elasticsearch-exporter --namespace=api --dry-run --debug"
+       sh "/usr/local/bin/helm upgrade --install elasticsearch-exporter -f elasticsearch-exporter/values.yml prometheus-community/prometheus-elasticsearch-exporter --namespace=monitoring --dry-run --debug"
     }
 }
 
@@ -57,7 +57,7 @@ def helmDryrunAppPrereq () {
        sh "/usr/local/bin/helm dependency update app-prereq/"
 
        // "helm repo add helm ${HELM_REPO}; helm repo update dryrun"
-       sh "/usr/local/bin/helm upgrade --install app-prereq app-prereq --namespace=api --dry-run --debug"
+       sh "/usr/local/bin/helm upgrade --install app-prereq app-prereq --namespace=monitoring --dry-run --debug"
     }
 }
 
@@ -69,7 +69,7 @@ def helmInstallAppPrereq () {
 
     script {
         // "helm repo add helm ${HELM_REPO}; helm repo update"
-        sh "/usr/local/bin/helm upgrade --install app-prereq app-prereq --namespace=api"
+        sh "/usr/local/bin/helm upgrade --install app-prereq app-prereq --namespace=monitoring"
         
         // install testclient kafka pod
         sh "kubectl apply -f app-prereq/test.yml -o yaml "
