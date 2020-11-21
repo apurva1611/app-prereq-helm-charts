@@ -463,7 +463,7 @@ kafka:
 
       prometheusRule:
         ## Add Prometheus Rules?
-        enabled: true
+        enabled: false
 
         ## Namespace in which to install the PrometheusRule resource.
         namespace: monitoring
