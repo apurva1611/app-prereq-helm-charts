@@ -1,5 +1,4 @@
 # app-prereq-helm-charts
-#Pipeline check
 setup the pre-requisites on the Kubernetes cluster before application is installed/setup.
 Steps:
 1. Go to APP-PREREQ-HELM-CHARTS directory:
