@@ -42,7 +42,7 @@ def helmInstallElasticsearchExporter (ElasticsearchExporterReleaseName) {
        sh "/usr/local/bin/helm repo add prometheus-community https://prometheus-community.github.io/helm-charts"
 
        // sh "helm repo add helm ${HELM_REPO}; helm repo update"
-       sh "/usr/local/bin/helm upgrade --install elasticsearch-exporter prometheus-community/prometheus-elasticsearch-exporter --namespace=monitoring --dry-run --debug"
+       sh "/usr/local/bin/helm upgrade --install elasticsearch-exporter prometheus-community/prometheus-elasticsearch-exporter --namespace=monitoring"
     }
 }
 

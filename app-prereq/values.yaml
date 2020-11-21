@@ -446,7 +446,7 @@ kafka:
 
     operator:
       ## Are you using Prometheus Operator?
-      enabled: true
+      enabled: false
 
       serviceMonitor:
         # Namespace in which to install the ServiceMonitor resource.
@@ -463,7 +463,7 @@ kafka:
 
       prometheusRule:
         ## Add Prometheus Rules?
-        enabled: true
+        enabled: false
 
         ## Namespace in which to install the PrometheusRule resource.
         namespace: monitoring
@@ -702,7 +702,7 @@ prometheus:
           honor_labels: true
 
           static_configs:
-            - targets: ['webapp.api:8080'] 
+            - targets: ['webapp:8080'] 
         - job_name: eexporter
           
           scrape_interval: 10s
