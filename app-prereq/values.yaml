@@ -446,7 +446,7 @@ kafka:
 
     operator:
       ## Are you using Prometheus Operator?
-      enabled: true
+      enabled: false
 
       serviceMonitor:
         # Namespace in which to install the ServiceMonitor resource.
@@ -463,7 +463,7 @@ kafka:
 
       prometheusRule:
         ## Add Prometheus Rules?
-        enabled: true
+        enabled: false
 
         ## Namespace in which to install the PrometheusRule resource.
         namespace: monitoring

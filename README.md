@@ -40,3 +40,5 @@ helm install kafka kafka --set external.externalZookeeper.servers =zookeeper.def
 
 
 jenkins hook
+
+demo assignment7
